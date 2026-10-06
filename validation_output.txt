@@ -1,0 +1,187 @@
+============================================================
+HEART DISEASE PREDICTION ML PROJECT
+============================================================
+
+DATA UNDERSTANDING
+------------------
+Dataset Shape: (1190, 12)
+Columns: ['age', 'sex', 'chest pain type', 'resting bp s', 'cholesterol', 'fasting blood sugar', 'resting ecg', 'max heart rate', 'exercise angina', 'oldpeak', 'ST slope', 'target']
+Data Types:
+age                      int64
+sex                      int64
+chest pain type          int64
+resting bp s             int64
+cholesterol              int64
+fasting blood sugar      int64
+resting ecg              int64
+max heart rate           int64
+exercise angina          int64
+oldpeak                float64
+ST slope                 int64
+target                   int64
+Numerical Features: ['age', 'resting bp s', 'cholesterol', 'max heart rate', 'oldpeak']
+Categorical Features: ['sex', 'chest pain type', 'fasting blood sugar', 'resting ecg', 'exercise angina', 'ST slope']
+Missing Values:
+age                    0
+sex                    0
+chest pain type        0
+resting bp s           0
+cholesterol            0
+fasting blood sugar    0
+resting ecg            0
+max heart rate         0
+exercise angina        0
+oldpeak                0
+ST slope               0
+target                 0
+Duplicate Rows: 272
+Unique Values for Categorical Columns:
+  sex: ['0', '1']
+  chest pain type: ['1', '2', '3', '4']
+  fasting blood sugar: ['0', '1']
+  resting ecg: ['0', '1', '2']
+  exercise angina: ['0', '1']
+  ST slope: ['0', '1', '2', '3']
+Target Column: target
+Target Class Distribution:
+target
+0    561
+1    629
+Basic Statistical Information:
+                      count        mean         std   min    25%    50%     75%    max
+age                  1190.0   53.720168    9.358203  28.0   47.0   54.0   60.00   77.0
+sex                  1190.0    0.763866    0.424884   0.0    1.0    1.0    1.00    1.0
+chest pain type      1190.0    3.232773    0.935480   1.0    3.0    4.0    4.00    4.0
+resting bp s         1190.0  132.153782   18.368823   0.0  120.0  130.0  140.00  200.0
+cholesterol          1190.0  210.363866  101.420489   0.0  188.0  229.0  269.75  603.0
+fasting blood sugar  1190.0    0.213445    0.409912   0.0    0.0    0.0    0.00    1.0
+resting ecg          1190.0    0.698319    0.870359   0.0    0.0    0.0    2.00    2.0
+max heart rate       1190.0  139.732773   25.517636  60.0  121.0  140.5  160.00  202.0
+exercise angina      1190.0    0.387395    0.487360   0.0    0.0    0.0    1.00    1.0
+oldpeak              1190.0    0.922773    1.086337  -2.6    0.0    0.6    1.60    6.2
+ST slope             1190.0    1.624370    0.610459   0.0    1.0    2.0    2.00    3.0
+target               1190.0    0.528571    0.499393   0.0    0.0    1.0    1.00    1.0
+
+DATA PREPROCESSING
+------------------
+Missing-value handling: median imputation (numeric) and most-frequent imputation (categorical), fitted only in pipelines.
+Duplicate handling: 272 duplicate row(s) removed before splitting.
+Invalid-value handling: No representation-invalid negative values detected.
+Outlier analysis (IQR; reported only, no rows removed or clipped):
+{'age': 0, 'resting bp s': 28, 'cholesterol': 183, 'max heart rate': 2, 'oldpeak': 16}
+Encoding: one-hot encoding with unknown categories ignored, fitted only in pipelines.
+Scaling: StandardScaler for numerical features, fitted only in pipelines.
+
+TRAIN-TEST SPLIT
+----------------
+Training Samples: 734
+Testing Samples: 184
+Split: 80% training / 20% testing
+Stratification: target labels; random_state=42
+
+
+FEATURE ENGINEERING COMPARISON
+                    Accuracy Precision  Recall F1-Score
+Model                                                  
+Polynomial Features   82.56%    84.72%  83.99%   84.27%
+PowerTransformer      84.75%    85.72%  87.20%   86.40%
+Best Feature Engineering Method: PowerTransformer
+
+CLINICAL FEATURE ENGINEERING
+----------------------------
+Created Features: ['age_group (age categories)', 'hr_ratio (max heart rate divided by age)', 'chol_age (cholesterol * age)']
+Skipped Features: ['high_risk (skipped: no validated dataset-specific risk definition)']
+
+
+FEATURE SELECTION COMPARISON
+                           Accuracy Precision  Recall F1-Score
+Feature Selection Strategy                                    
+Mutual Information           84.88%    85.82%  87.45%   86.54%
+RFE                          84.47%    85.69%  86.70%   86.11%
+L1 Model-Based               84.88%    85.96%  87.20%   86.51%
+Best Feature Selection Method: L1 Model-Based
+Selected Features:
+1. age
+2. cholesterol
+3. max heart rate
+4. oldpeak
+5. chol_age
+6. sex_0
+7. chest pain type_1
+8. chest pain type_3
+9. chest pain type_4
+10. fasting blood sugar_0
+11. resting ecg_2
+12. exercise angina_1
+13. ST slope_0
+14. ST slope_1
+15. ST slope_2
+16. age_group_45-54
+17. age_group_65+
+
+HYPERPARAMETER OPTIMIZATION
+---------------------------
+Random Forest Best Parameters: {'model__n_estimators': 100, 'model__min_samples_split': 5, 'model__min_samples_leaf': 1, 'model__max_features': 'log2', 'model__max_depth': 5, 'model__class_weight': 'balanced'}
+SVM Best Parameters: {'model__estimator__kernel': 'rbf', 'model__estimator__gamma': 'scale', 'model__estimator__C': 10}
+XGBoost Best Parameters: {'model__subsample': 0.85, 'model__n_estimators': 80, 'model__min_child_weight': 5, 'model__max_depth': 3, 'model__learning_rate': 0.1, 'model__colsample_bytree': 1.0}
+LightGBM Best Parameters: {'model__subsample': 0.85, 'model__num_leaves': 7, 'model__n_estimators': 200, 'model__min_child_samples': 30, 'model__max_depth': 5, 'model__learning_rate': 0.03, 'model__colsample_bytree': 1.0}
+
+MODEL RESULTS
+=============
+
+Model 1: Random Forest
+Accuracy: 87.50%
+Precision: 86.24%
+Recall: 92.16%
+F1-Score: 89.10%
+
+Model 2: RF + SVM
+Accuracy: 89.67%
+Precision: 90.29%
+Recall: 91.18%
+F1-Score: 90.73%
+
+Model 3: RF + SVM + XGBoost
+Accuracy: 90.22%
+Precision: 90.38%
+Recall: 92.16%
+F1-Score: 91.26%
+
+Model 4: RF + SVM + XGBoost + LightGBM
+Accuracy: 89.67%
+Precision: 90.29%
+Recall: 91.18%
+F1-Score: 90.73%
+
+
+FINAL MODEL COMPARISON
+======================
+                                       Accuracy Precision  Recall F1-Score
+Model                                                                     
+Model 1: Random Forest                   87.50%    86.24%  92.16%   89.10%
+Model 2: RF + SVM                        89.67%    90.29%  91.18%   90.73%
+Model 3: RF + SVM + XGBoost              90.22%    90.38%  92.16%   91.26%
+Model 4: RF + SVM + XGBoost + LightGBM   89.67%    90.29%  91.18%   90.73%
+
+BEST MODEL CONFUSION MATRIX
+===========================
+Model 3: RF + SVM + XGBoost
+                 Predicted No  Predicted Yes
+Actual No        72           10
+Actual Yes       8            94
+
+DIAGNOSTIC CHARTS
+=================
+Feature selection scores: C:\Users\Akanksha\Downloads\mp2\heart_disease_prediction\outputs\feature_selection_scores.png
+Best-model confusion matrix: C:\Users\Akanksha\Downloads\mp2\heart_disease_prediction\outputs\confusion_matrix_best_model.png
+Best-model ROC curve: C:\Users\Akanksha\Downloads\mp2\heart_disease_prediction\outputs\roc_curve_best_model.png
+
+BEST MODEL
+==========
+Best Model: Model 3: RF + SVM + XGBoost
+Best Test Accuracy: 90.22%
+Best Precision: 90.38%
+Best Recall: 92.16%
+Best F1-Score: 91.26%
+
+Do you want to predict heart disease for a new patient? (y/n): New-patient prediction skipped.
